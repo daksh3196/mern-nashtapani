@@ -1,0 +1,5 @@
+Mongo Atlas URI (app.js code is commented in the file)
+
+MONGO_URI=mongodb+srv://daksh:daksh@nodeapi-tljab.mongodb.net
+/nodeapi?retryWrites=true&w=majority
+
