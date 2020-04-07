@@ -1,16 +1,13 @@
 const User = require("../models/user");
 
-exports.signup = (req, res) => {
-    //console.log("req.body", req.body);
-    const user = new User(req.body);
-    user.save((err, user) => {
-        if (err) {
+exports.userById = (req, res, next, id) => {
+    User.findById(id).exec((err, user) => {
+        if (err || !user) {
             return res.status(400).json({
-                error
+                error: "User not found"
             });
         }
-        res.json({
-            user
-        });
+        req.profile = user;
+        next();
     });
 };

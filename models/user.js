@@ -28,13 +28,31 @@ const userSchema = new mongoose.Schema({
 		type: Number,
 		default: 0
 	},
+	isVerified: {
+		type: Boolean,
+		trim: true,
+		default: false
+	},
+	isAdmin: {
+		type: Boolean,
+		trim: true,
+		default: false
+	},
 	history: {
 		type: Array,
 		default: []
-	}
+	},
+	passwordResetToken: String,
+  	passwordResetExpires: Date
 },
 {timestamps: true}
 );
+	
+const tokenSchema = new mongoose.Schema({
+    _userId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
+    token: { type: String, required: true },
+    createdAt: { type: Date, required: true, default: Date.now, expires: 43200 }
+});
 
 userSchema
     .virtual("password")
@@ -48,6 +66,9 @@ userSchema
     });
 
 userSchema.methods = {
+	authenticate: function(plainText) {
+        return this.encryptPassword(plainText) === this.hashed_password;
+    },
     encryptPassword: function(password) {
         if (!password) return "";
         try {
