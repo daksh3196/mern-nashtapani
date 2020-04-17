@@ -80,6 +80,12 @@ exports.signin = (req, res) => {
 };
 
 exports.signout = (req,res) => {
+    let user =req.auth;
+    if(!user){
+        res.json({
+        message : "User not signed in!"
+    });
+    }        
     res.clearCookie("t");
     res.json({
         message : "User Successfully signed out!"
@@ -99,6 +105,7 @@ exports.requireSignin = expressJwt({
 exports.isAuth = (req, res, next) => {
     let user = req.profile && req.auth && req.profile._id == req.auth._id;
     if (!user) {
+        res.redirect("/api/signin")
         return res.status(403).json({
             error: "Access denied"
         });
